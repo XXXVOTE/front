@@ -54,7 +54,7 @@ const VoteNew = ({ history }) => {
   }
   const handleSubmit = async (e) => {
     e.preventDefault();
-    fetch("http://13.125.21.192:3001/election/", {
+    fetch("https://jggg.loca.lt/election/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -171,7 +171,8 @@ const VoteNew = ({ history }) => {
                   openModal2();
                 }}
                 className="candidate-profile"
-                src={profileAdd}
+                // src={profileAdd}
+                src="https://uosvotepk.s3.ap-northeast-2.amazonaws.com/candidate/electionID-999/candidate0-profile"
                 alt="후보 추가하기"
               ></img>
             </div>
