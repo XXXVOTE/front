@@ -33,43 +33,6 @@ function Voteinfo() {
     }
   }, []);
 
-  console.log("loading " + electionloading);
-  console.log(electionlist);
-
-  const length = electionlist.length;
-  let fullRange, nowRange;
-
-  let candidateContent = [];
-  if (electionlist.length > 0) {
-    for (let i = 0; i < electionlist[length - id].candidates.length; i++) {
-      candidateContent.push(
-        <div key={electionlist[length - id].candidates[i].candidateNumber}>
-          <div className="candidate-name">
-            {electionlist[length - id].candidates[i].candidateNumber +
-              ". " +
-              electionlist[length - id].candidates[i].candidateName}
-          </div>
-          <img
-            className="candidate-profile"
-            src={electionlist[length - id].candidates[i].profile}
-            alt="프로필"
-          ></img>
-          <div className="candidate-promise">
-            {electionlist[length - id].candidates[i].promise}
-          </div>
-          <div className="space"></div>
-        </div>
-      );
-    }
-    fullRange =
-      new Date(electionlist[length - id].endDate) -
-      new Date(electionlist[length - id].startDate);
-    console.log("lalala" + fullRange);
-    nowRange = new Date() - new Date(electionlist[length - id].startDate);
-    console.log("hahaha" + nowRange);
-    console.log("kakaak" + (nowRange / fullRange) * 100);
-  }
-
   return (
     <div className="voteinfo">
       {electionlist.length == 0 && (
@@ -78,107 +41,131 @@ function Voteinfo() {
         </div>
       )}
 
-      {electionlist.length > 0 && (
-        <>
-          <div className="name-range">
-            <div className="name">
-              <div className="title">투표 명</div>
-              <div className="border"></div>
-              <div className="info"> {electionlist[length - id].name} </div>
-            </div>
-            <div className="range">
-              <div className="title">기간 </div>
-              <div className="border"></div>
-              <div className="info">
-                {Moment(electionlist[length - id].startDate).format(
-                  "yyyy/MM/DD h:mm a"
-                )}{" "}
-                ~
-                {Moment(electionlist[length - id].endDate).format(
-                  "yyyy/MM/DD h:mm a"
-                )}
-              </div>
-            </div>
-          </div>
-          <div className="title">투표 정보</div>
-          <div className="border"></div>
-          <div className="info">{electionlist[length - id].info}</div>
-          <div className="title">후보 정보</div>
-          <div className="border"></div>
-          <div className="info">{candidateContent}</div>
-          <div className="title">투표 현황</div>
-          <div className="border"></div>
-          <div className="center">
-            <div className="center-row">
-              <div className="center-title">투표 참여율</div>
-            </div>
-            <div className="center-row-inner">
-              <div className="center-mark">
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    borderRadius: "50%",
-                    width: 15,
-                    height: 15,
-                    backgroundColor: "#067F7F",
-                  }}
-                ></div>
-                정족수({electionlist[length - id].quorum}명)
-              </div>
-              <div className="center-info">
-                {(now / electionlist[length - id].total) * 100}%({now}명/
-                {electionlist[length - id].total}명)
-              </div>
-            </div>
-            <ProgressBar
-              width={800}
-              percent={(now / electionlist[length - id].total) * 100}
-              stepPositions={[
-                (electionlist[length - id].quorum /
-                  electionlist[length - id].total) *
-                  100,
-              ]}
-              filledBackground="linear-gradient(to right, #06287f, #06287f)"
-              unfilledBackground="#8393bf"
-            >
-              <Step transition="scale">
-                {({ accomplished, index }) => (
-                  <div
-                    className={`indexedStep ${
-                      accomplished ? "accomplished" : ""
-                    }`}
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      borderRadius: "50%",
-                      width: 15,
-                      height: 15,
-                      backgroundColor: "#067F7F",
-                    }}
-                  ></div>
-                )}
-              </Step>
-            </ProgressBar>
-            <div className="center-row">
-              <div className="center-title">남은 투표 기간</div>
-            </div>
-            <div className="center-row-inner">
-              <div className="center-mark"></div>
-              <div className="center-info">
-                {((nowRange / fullRange) * 100).toFixed(1)}%
-              </div>
-            </div>
-            <ProgressBar
-              width={800}
-              percent={(nowRange / fullRange) * 100}
-              filledBackground="linear-gradient(to right, #06287f, #06287f)"
-              unfilledBackground="#8393bf"
-            ></ProgressBar>
-            <div className="space2"></div>
-          </div>
-        </>
-      )}
+      {electionlist.length > 0 &&
+        electionlist.map((data) => {
+          if (data.id == id) {
+            let fullRange, nowRange;
+
+            let candidateContent = [];
+            for (let i = 0; i < data.candidates.length; i++) {
+              candidateContent.push(
+                <div key={data.candidates[i].candidateNumber}>
+                  <div className="candidate-name">
+                    {data.candidates[i].candidateNumber +
+                      ". " +
+                      data.candidates[i].candidateName}
+                  </div>
+                  <img
+                    className="candidate-profile"
+                    src={data.candidates[i].profile}
+                    alt="프로필"
+                  ></img>
+                  <div className="candidate-promise">
+                    {data.candidates[i].promise}
+                  </div>
+                  <div className="space"></div>
+                </div>
+              );
+              fullRange = new Date(data.endDate) - new Date(data.startDate);
+              console.log("lalala" + fullRange);
+              nowRange = new Date() - new Date(data.startDate);
+              console.log("hahaha" + nowRange);
+              console.log("kakaak" + (nowRange / fullRange) * 100);
+            }
+            return (
+              <>
+                <div className="name-range">
+                  <div className="name">
+                    <div className="title">투표 명</div>
+                    <div className="border"></div>
+                    <div className="info"> {data.name} </div>
+                  </div>
+                  <div className="range">
+                    <div className="title">기간 </div>
+                    <div className="border"></div>
+                    <div className="info">
+                      {Moment(data.startDate).format("yyyy/MM/DD h:mm a")} ~
+                      {Moment(data.endDate).format("yyyy/MM/DD h:mm a")}
+                    </div>
+                  </div>
+                </div>
+                <div className="title">투표 정보</div>
+                <div className="border"></div>
+                <div className="info">{data.info}</div>
+                <div className="title">후보 정보</div>
+                <div className="border"></div>
+                <div className="info">{candidateContent}</div>
+                <div className="title">투표 현황</div>
+                <div className="border"></div>
+                <div className="center">
+                  <div className="center-row">
+                    <div className="center-title">투표 참여율</div>
+                  </div>
+                  <div className="center-row-inner">
+                    <div className="center-mark">
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "center",
+                          borderRadius: "50%",
+                          width: 15,
+                          height: 15,
+                          backgroundColor: "#067F7F",
+                        }}
+                      ></div>
+                      정족수({data.quorum}명)
+                    </div>
+                    <div className="center-info">
+                      {(now / data.total) * 100}%({now}명/
+                      {data.total}명)
+                    </div>
+                  </div>
+                  <ProgressBar
+                    width={800}
+                    percent={(now / data.total) * 100}
+                    stepPositions={[(data.quorum / data.total) * 100]}
+                    filledBackground="linear-gradient(to right, #06287f, #06287f)"
+                    unfilledBackground="#8393bf"
+                  >
+                    <Step transition="scale">
+                      {({ accomplished, index }) => (
+                        <div
+                          className={`indexedStep ${
+                            accomplished ? "accomplished" : ""
+                          }`}
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            borderRadius: "50%",
+                            width: 15,
+                            height: 15,
+                            backgroundColor: "#067F7F",
+                          }}
+                        ></div>
+                      )}
+                    </Step>
+                  </ProgressBar>
+                  <div className="center-row">
+                    <div className="center-title">남은 투표 기간</div>
+                  </div>
+                  <div className="center-row-inner">
+                    <div className="center-mark"></div>
+                    <div className="center-info">
+                      {((nowRange / fullRange) * 100).toFixed(1)}%
+                    </div>
+                  </div>
+                  <ProgressBar
+                    width={800}
+                    percent={(nowRange / fullRange) * 100}
+                    filledBackground="linear-gradient(to right, #06287f, #06287f)"
+                    unfilledBackground="#8393bf"
+                  ></ProgressBar>
+                  <div className="space2"></div>
+                </div>
+              </>
+            );
+          }
+        })}
     </div>
   );
 }
